@@ -54,3 +54,52 @@ O sistema é estruturado em quatro classes principais: **Funcionário**, **Estud
 
 ![Mapa mental do sistema](/docs/Mapa-Sistema-Biblioteca.png)
 
+## Diagrama
+
+```mermaid
+mindmap
+  root((📚 Sistema de Biblioteca Escolar))
+    👥 Atores
+      👨‍💼 Bibliotecário
+        Livros
+        Alunos
+        Empréstimos
+        Devoluções
+      👨‍🎓 Aluno
+        Consulta do acervo
+        Disponibilidade
+
+    🖥️ Funcionalidades
+      🔐 Login
+      📚 Gestão de livros
+      👨‍🎓 Gestão de alunos
+      📖 Empréstimos
+      ↩️ Devoluções
+      📊 Histórico
+
+    ⚙️ Requisitos
+      RF01 Login
+      RF02 Cadastro de livros
+      RF03 Consulta de livros
+      RF04 Cadastro de alunos
+      RF05 Empréstimos
+      RF06 Devoluções
+      RF07 Disponibilidade automática
+      RF08 Empréstimos ativos
+      RF09 Histórico
+
+    🛡️ Qualidade
+      Simplicidade
+      Compatibilidade
+      Desempenho
+      Segurança
+      Responsividade
+      Manutenção
+
+    🧱 Tecnologia
+      HTML5
+      CSS3
+      JavaScript
+      Python API
+      MySQL
+```
