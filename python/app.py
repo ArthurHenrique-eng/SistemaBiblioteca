@@ -7,6 +7,7 @@ from routes.auth import auth_bp
 from routes.livros import livros_bp
 from routes.estudantes import estudantes_bp
 from routes.emprestimos import emprestimos_bp
+from routes.funcionarios import funcionarios_bp
 
 load_dotenv()
 
@@ -17,16 +18,10 @@ def create_app():
     CORS(app)
 
     app.register_blueprint(auth_bp, url_prefix="/api")
-
-
-def create_app():
-    app = Flask(__name__)
-    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev")
-
-    app.register_blueprint(auth_bp, url_prefix="/api")
     app.register_blueprint(livros_bp, url_prefix="/api")
     app.register_blueprint(estudantes_bp, url_prefix="/api")
     app.register_blueprint(emprestimos_bp, url_prefix="/api")
+    app.register_blueprint(funcionarios_bp, url_prefix="/api")
 
     @app.route("/api/health", methods=["GET"])
     def health():

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alunos — Biblioteca Escolar</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="mobile-topbar">
+    <div class="login-brand" style="margin:0;"><span class="dot"></span><span>Biblioteca.sys</span></div>
+    <button class="hamburger" data-hamburger>☰</button>
+  </div>
+  <div class="sidebar-overlay" data-sidebar-overlay></div>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-brand">
+          <span class="dot"></span>
+          <div><span>Biblioteca<span style="color: var(--accent-blue);">.sys</span></span><small>ENSINO MÉDIO</small></div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Dashboard</a>
+        <a href="livros.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></svg>Livros</a>
+        <a href="alunos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15.3 14.3c2.4.6 4.2 2.8 4.2 5.4"/></svg>Alunos</a>
+        <a href="funcionarios.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="12" r="2.2"/><path d="M14 10.2h4M14 13.8h4"/></svg>Funcionários</a>
+        <a href="emprestimos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h13M17 7l-3-3M17 7l-3 3"/><path d="M20 17H7M7 17l3-3M7 17l3 3"/></svg>Empréstimos</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user"><span class="name" data-user-name>—</span><span class="role" data-user-role>—</span></div>
+        <button class="btn-logout" data-logout>Sair</button>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <div class="page-header">
+        <div>
+          <div class="eyebrow">Comunidade escolar</div>
+          <h1>Alunos</h1>
+          <p>Cadastre alunos e gerencie o acesso deles ao sistema.</p>
+        </div>
+        <button class="btn btn-primary" id="btn-novo-aluno">+ Novo aluno</button>
+      </div>
+
+      <div class="table-toolbar">
+        <input type="text" id="filtro-nome" placeholder="Buscar por nome">
+        <input type="text" id="filtro-matricula" placeholder="Buscar por matrícula">
+        <button class="btn btn-ghost btn-sm" id="btn-buscar">Buscar</button>
+        <button class="btn btn-ghost btn-sm" id="btn-limpar">Limpar</button>
+      </div>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr><th>Nome</th><th>Turma</th><th>Matrícula</th><th>Login</th><th>Contato</th><th></th></tr>
+          </thead>
+          <tbody id="tabela-alunos">
+            <tr><td colspan="6" class="empty-state">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="modal-aluno">
+    <div class="modal">
+      <h2>Novo aluno</h2>
+      <p>O aluno usará o login e senha abaixo para acessar o sistema.</p>
+      <form id="form-aluno">
+        <div class="form-grid">
+          <div class="field" style="grid-column: 1 / -1;">
+            <label for="aluno-nome">Nome completo</label>
+            <input type="text" id="aluno-nome" required>
+          </div>
+          <div class="field">
+            <label for="aluno-turma">Turma</label>
+            <input type="text" id="aluno-turma" placeholder="3ºA" required>
+          </div>
+          <div class="field">
+            <label for="aluno-matricula">Matrícula</label>
+            <input type="text" id="aluno-matricula" required>
+          </div>
+          <div class="field">
+            <label for="aluno-contato">Contato</label>
+            <input type="text" id="aluno-contato" placeholder="email ou telefone">
+          </div>
+          <div class="field">
+            <label for="aluno-login">Login</label>
+            <input type="text" id="aluno-login" required>
+          </div>
+          <div class="field" style="grid-column: 1 / -1;">
+            <label for="aluno-senha">Senha</label>
+            <input type="password" id="aluno-senha" required>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" id="btn-cancelar-aluno">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/authguard.js"></script>
+  <script src="/js/alunos.js"></script>
+</body>
+</html>

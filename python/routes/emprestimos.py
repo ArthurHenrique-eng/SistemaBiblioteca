@@ -1,6 +1,6 @@
 from datetime import date
 from flask import Blueprint, request, jsonify
-from db import get_connection
+from db import get_connection, execute_query
 
 emprestimos_bp = Blueprint("emprestimos", __name__)
 
@@ -92,7 +92,6 @@ def registrar_devolucao(id_emprestimo):
 @emprestimos_bp.route("/emprestimos/ativos", methods=["GET"])
 def listar_emprestimos_ativos():
     """RF08 - Listagem de empréstimos ativos"""
-    from db import execute_query
     emprestimos = execute_query(
         """SELECT e.id_emprestimo, e.data_emprestimo, e.data_devolucao_prevista, e.status,
                   est.nome AS nome_estudante, est.matricula,
@@ -110,7 +109,6 @@ def listar_emprestimos_ativos():
 @emprestimos_bp.route("/emprestimos/historico", methods=["GET"])
 def historico_emprestimos():
     """RF09 - Histórico simples de empréstimos"""
-    from db import execute_query
     id_estudante = request.args.get("id_estudante")
 
     query = """SELECT e.id_emprestimo, e.data_emprestimo, e.data_devolucao_prevista,
@@ -128,4 +126,19 @@ def historico_emprestimos():
     query += " ORDER BY e.data_emprestimo DESC"
 
     emprestimos = execute_query(query, tuple(params), fetch=True)
+    return jsonify(emprestimos), 200
+
+
+@emprestimos_bp.route("/estudantes/<int:id_estudante>/emprestimos", methods=["GET"])
+def meus_emprestimos(id_estudante):
+    """Empréstimos (ativos e histórico) de um aluno específico"""
+    emprestimos = execute_query(
+        """SELECT e.id_emprestimo, e.data_emprestimo, e.data_devolucao_prevista,
+                  e.data_devolucao_real, e.status, l.titulo AS titulo_livro
+           FROM emprestimo e
+           JOIN livro l ON l.id_livro = e.id_livro
+           WHERE e.id_estudante = %s
+           ORDER BY e.data_emprestimo DESC""",
+        (id_estudante,), fetch=True
+    )
     return jsonify(emprestimos), 200

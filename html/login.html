@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — Biblioteca Escolar</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="login-screen">
+    <div class="login-card">
+      <div class="login-brand">
+        <span class="dot"></span>
+        <span>Biblioteca<span style="color: var(--accent-blue);">.sys</span></span>
+      </div>
+
+      <h1>Acessar o sistema</h1>
+      <p class="sub">Entre com seu login de funcionário ou aluno.</p>
+
+      <div class="login-error" id="login-error"></div>
+
+      <form class="login-form" id="login-form">
+        <div class="field">
+          <label for="login">Login</label>
+          <input type="text" id="login" name="login" placeholder="seu.login" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="password">Senha</label>
+          <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="login-btn">Entrar</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/login.js"></script>
+</body>
+</html>

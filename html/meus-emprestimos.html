@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meus empréstimos — Biblioteca Escolar</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="mobile-topbar">
+    <div class="login-brand" style="margin:0;"><span class="dot"></span><span>Biblioteca.sys</span></div>
+    <button class="hamburger" data-hamburger>☰</button>
+  </div>
+  <div class="sidebar-overlay" data-sidebar-overlay></div>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-brand">
+          <span class="dot"></span>
+          <div><span>Biblioteca<span style="color: var(--accent-blue);">.sys</span></span><small>ÁREA DO ALUNO</small></div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="meus-emprestimos.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></svg>Meus empréstimos</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user"><span class="name" data-user-name>—</span><span class="role" data-user-role>—</span></div>
+        <button class="btn-logout" data-logout>Sair</button>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <div class="page-header">
+        <div>
+          <div class="eyebrow">Área do aluno</div>
+          <h1>Meus empréstimos</h1>
+          <p>Consulte o acervo disponível e acompanhe seus empréstimos.</p>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-bottom:16px;">
+        <button class="btn btn-ghost btn-sm" id="tab-meus" data-active="true">Meus empréstimos</button>
+        <button class="btn btn-ghost btn-sm" id="tab-catalogo">Consultar livros</button>
+      </div>
+
+      <div class="card" id="painel-meus">
+        <table>
+          <thead>
+            <tr><th>Livro</th><th>Empréstimo</th><th>Devolução prevista</th><th>Status</th></tr>
+          </thead>
+          <tbody id="tabela-meus-emprestimos">
+            <tr><td colspan="4" class="empty-state">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="painel-catalogo" style="display:none;">
+        <div class="table-toolbar">
+          <input type="text" id="filtro-titulo" placeholder="Buscar por título">
+          <input type="text" id="filtro-autor" placeholder="Buscar por autor">
+          <input type="text" id="filtro-categoria" placeholder="Buscar por categoria">
+          <button class="btn btn-ghost btn-sm" id="btn-buscar-catalogo">Buscar</button>
+        </div>
+        <div class="card">
+          <table>
+            <thead>
+              <tr><th>Título</th><th>Autor</th><th>Categoria</th><th>Ano</th><th>Disponibilidade</th></tr>
+            </thead>
+            <tbody id="tabela-catalogo">
+              <tr><td colspan="5" class="empty-state">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/authguard.js"></script>
+  <script src="/js/meusemprestimos.js"></script>
+</body>
+</html>

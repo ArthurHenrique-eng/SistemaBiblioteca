@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from werkzeug.security import generate_password_hash
 from db import execute_query
 
 estudantes_bp = Blueprint("estudantes", __name__)
@@ -9,20 +10,24 @@ def cadastrar_estudante():
     """RF04 - Cadastro de alunos"""
     data = request.get_json(silent=True) or {}
 
-    if not data.get("nome") or not data.get("matricula") or not data.get("turma"):
-        return jsonify({"erro": "Nome, turma e matrícula são obrigatórios"}), 400
+    obrigatorios = ["nome", "turma", "matricula", "login", "password"]
+    if not all(data.get(campo) for campo in obrigatorios):
+        return jsonify({"erro": "Nome, turma, matrícula, login e senha são obrigatórios"}), 400
 
     existente = execute_query(
-        "SELECT id_estudante FROM estudante WHERE matricula = %s",
-        (data.get("matricula"),), fetch_one=True
+        "SELECT id_estudante FROM estudante WHERE matricula = %s OR login = %s",
+        (data.get("matricula"), data.get("login")), fetch_one=True
     )
     if existente:
-        return jsonify({"erro": "Matrícula já cadastrada"}), 409
+        return jsonify({"erro": "Matrícula ou login já cadastrado"}), 409
+
+    senha_hash = generate_password_hash(data.get("password"))
 
     novo_id = execute_query(
-        """INSERT INTO estudante (nome, turma, matricula, contato)
-           VALUES (%s, %s, %s, %s)""",
-        (data.get("nome"), data.get("turma"), data.get("matricula"), data.get("contato")),
+        """INSERT INTO estudante (nome, turma, matricula, contato, login, password)
+           VALUES (%s, %s, %s, %s, %s, %s)""",
+        (data.get("nome"), data.get("turma"), data.get("matricula"),
+         data.get("contato"), data.get("login"), senha_hash),
         commit=True
     )
     return jsonify({"mensagem": "Aluno cadastrado com sucesso", "id_estudante": novo_id}), 201
@@ -33,7 +38,8 @@ def consultar_estudantes():
     nome = request.args.get("nome")
     matricula = request.args.get("matricula")
 
-    query = "SELECT * FROM estudante WHERE 1=1"
+    query = """SELECT id_estudante, nome, turma, matricula, contato, login
+               FROM estudante WHERE 1=1"""
     params = []
 
     if nome:
@@ -50,7 +56,9 @@ def consultar_estudantes():
 @estudantes_bp.route("/estudantes/<int:id_estudante>", methods=["GET"])
 def obter_estudante(id_estudante):
     estudante = execute_query(
-        "SELECT * FROM estudante WHERE id_estudante = %s", (id_estudante,), fetch_one=True
+        """SELECT id_estudante, nome, turma, matricula, contato, login
+           FROM estudante WHERE id_estudante = %s""",
+        (id_estudante,), fetch_one=True
     )
     if not estudante:
         return jsonify({"erro": "Aluno não encontrado"}), 404

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Biblioteca Escolar</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="mobile-topbar">
+    <div class="login-brand" style="margin:0;">
+      <span class="dot"></span><span>Biblioteca.sys</span>
+    </div>
+    <button class="hamburger" data-hamburger>☰</button>
+  </div>
+  <div class="sidebar-overlay" data-sidebar-overlay></div>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-brand">
+          <span class="dot"></span>
+          <div>
+            <span>Biblioteca<span style="color: var(--accent-blue);">.sys</span></span>
+            <small>ENSINO MÉDIO</small>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Dashboard</a>
+        <a href="livros.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></svg>Livros</a>
+        <a href="alunos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15.3 14.3c2.4.6 4.2 2.8 4.2 5.4"/></svg>Alunos</a>
+        <a href="funcionarios.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="12" r="2.2"/><path d="M14 10.2h4M14 13.8h4"/></svg>Funcionários</a>
+        <a href="emprestimos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h13M17 7l-3-3M17 7l-3 3"/><path d="M20 17H7M7 17l3-3M7 17l3 3"/></svg>Empréstimos</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <span class="name" data-user-name>—</span>
+          <span class="role" data-user-role>—</span>
+        </div>
+        <button class="btn-logout" data-logout>Sair</button>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <div class="page-header">
+        <div>
+          <div class="eyebrow">Visão geral</div>
+          <h1>Painel de controle</h1>
+          <p>Status atual do acervo e das movimentações da biblioteca.</p>
+        </div>
+      </div>
+
+      <div class="stat-grid" id="stat-grid">
+        <div class="stat-card accent-blue"><div class="stat-label">Livros no acervo</div><div class="stat-value" id="stat-livros">—</div></div>
+        <div class="stat-card accent-violet"><div class="stat-label">Alunos cadastrados</div><div class="stat-value" id="stat-alunos">—</div></div>
+        <div class="stat-card accent-cyan"><div class="stat-label">Empréstimos ativos</div><div class="stat-value" id="stat-ativos">—</div></div>
+        <div class="stat-card accent-amber"><div class="stat-label">Devoluções atrasadas</div><div class="stat-value" id="stat-atrasados">—</div></div>
+      </div>
+
+      <h2 style="font-size: 1.02rem; margin-bottom: 14px;">Acesso rápido</h2>
+      <div class="shortcut-grid" style="margin-bottom: 32px;">
+        <a class="shortcut-card" href="livros.html">
+          <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"/></svg></div>
+          <h3>Gerenciar livros</h3>
+          <p>Cadastrar, consultar e atualizar o acervo.</p>
+        </a>
+        <a class="shortcut-card" href="alunos.html">
+          <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg></div>
+          <h3>Gerenciar alunos</h3>
+          <p>Cadastrar novos alunos e consultar matrículas.</p>
+        </a>
+        <a class="shortcut-card" href="emprestimos.html">
+          <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h13M17 7l-3-3M17 7l-3 3"/><path d="M20 17H7M7 17l3-3M7 17l3 3"/></svg></div>
+          <h3>Empréstimos</h3>
+          <p>Registrar empréstimos e devoluções.</p>
+        </a>
+      </div>
+
+      <div class="card card-pad">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h2 style="font-size: 1rem;">Empréstimos ativos recentes</h2>
+          <a href="emprestimos.html" style="font-size:0.82rem; color:var(--accent-blue);">Ver todos →</a>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Aluno</th><th>Livro</th><th>Devolução prevista</th><th>Status</th></tr>
+          </thead>
+          <tbody id="tabela-recentes">
+            <tr><td colspan="4" class="empty-state">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/authguard.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
