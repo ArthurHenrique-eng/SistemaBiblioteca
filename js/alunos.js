@@ -63,15 +63,14 @@ async function cadastrarAluno(event) {
   const dados = {
     nome: document.getElementById("aluno-nome").value.trim(),
     turma: document.getElementById("aluno-turma").value.trim(),
-    matricula: document.getElementById("aluno-matricula").value.trim(),
     contato: document.getElementById("aluno-contato").value.trim(),
     login: document.getElementById("aluno-login").value.trim(),
     password: document.getElementById("aluno-senha").value,
   };
 
   try {
-    await Api.cadastrarEstudante(dados);
-    mostrarToast("Aluno cadastrado com sucesso.");
+    const resposta = await Api.cadastrarEstudante(dados);
+    mostrarToast(`Aluno cadastrado. Matrícula gerada: ${resposta.matricula}`);
     fecharModal();
     carregarAlunos();
   } catch (err) {

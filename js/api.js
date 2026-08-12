@@ -61,6 +61,8 @@ const Api = {
 
   /* ---------- Empréstimos ---------- */
   registrarEmprestimo: (dados) => apiRequest("/emprestimos", { method: "POST", body: dados }),
+  autoEmprestimo: (idEstudante, idLivro) =>
+    apiRequest(`/estudantes/${idEstudante}/emprestimos`, { method: "POST", body: { id_livro: idLivro } }),
   registrarDevolucao: (id) => apiRequest(`/emprestimos/${id}/devolucao`, { method: "PUT" }),
   listarEmprestimosAtivos: () => apiRequest("/emprestimos/ativos"),
   historicoEmprestimos: (idEstudante = null) => {

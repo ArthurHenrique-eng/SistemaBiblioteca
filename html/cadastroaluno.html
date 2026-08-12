@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar conta de aluno — Biblioteca Escolar</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="login-screen">
+    <div class="login-card" style="max-width: 440px;">
+      <div class="login-brand">
+        <span class="dot"></span>
+        <span>Biblioteca<span style="color: var(--accent-blue);">.sys</span></span>
+      </div>
+
+      <h1>Criar conta de aluno</h1>
+      <p class="sub">Cadastre-se para consultar o acervo e acompanhar seus empréstimos.</p>
+
+      <div class="login-error" id="cadastro-error"></div>
+
+      <form class="login-form" id="cadastro-form">
+        <div class="form-grid" style="grid-template-columns: 1fr;">
+          <div class="field">
+            <label for="aluno-nome">Nome completo</label>
+            <input type="text" id="aluno-nome" placeholder="Seu nome completo" required>
+          </div>
+          <div class="field">
+            <label for="aluno-turma">Turma</label>
+            <input type="text" id="aluno-turma" placeholder="Ex: 3ºA" required>
+          </div>
+          <div class="field">
+            <label for="aluno-contato">Contato</label>
+            <input type="text" id="aluno-contato" placeholder="E-mail ou telefone">
+          </div>
+          <div class="field">
+            <label for="aluno-login">Login</label>
+            <input type="text" id="aluno-login" placeholder="Escolha um login" autocomplete="username" required>
+          </div>
+          <div class="field">
+            <label for="aluno-senha">Senha</label>
+            <input type="password" id="aluno-senha" placeholder="••••••••" autocomplete="new-password" required minlength="4">
+          </div>
+          <div class="field">
+            <label for="aluno-senha-confirma">Confirmar senha</label>
+            <input type="password" id="aluno-senha-confirma" placeholder="••••••••" autocomplete="new-password" required minlength="4">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="cadastro-btn">Criar conta</button>
+      </form>
+
+      <p class="sub" style="margin-top: 18px; margin-bottom: 0; text-align: center;">
+        Já tem conta? <a href="login.html" style="color: var(--accent-blue); font-weight: 600;">Entrar</a>
+      </p>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/cadastroaluno.js"></script>
+</body>
+</html>

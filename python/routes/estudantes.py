@@ -1,8 +1,23 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 from db import execute_query
+import random
 
 estudantes_bp = Blueprint("estudantes", __name__)
+
+
+def gerar_matricula_unica():
+    """Gera uma matrícula numérica de 5 a 9 dígitos que ainda não existe no banco."""
+    for _ in range(20):
+        tamanho = random.randint(5, 9)
+        candidata = "".join(random.choices("0123456789", k=tamanho))
+        existente = execute_query(
+            "SELECT id_estudante FROM estudante WHERE matricula = %s",
+            (candidata,), fetch_one=True
+        )
+        if not existente:
+            return candidata
+    raise RuntimeError("Não foi possível gerar uma matrícula única. Tente novamente.")
 
 
 @estudantes_bp.route("/estudantes", methods=["POST"])
@@ -10,27 +25,29 @@ def cadastrar_estudante():
     """RF04 - Cadastro de alunos"""
     data = request.get_json(silent=True) or {}
 
-    obrigatorios = ["nome", "turma", "matricula", "login", "password"]
+    obrigatorios = ["nome", "turma", "login", "password"]
     if not all(data.get(campo) for campo in obrigatorios):
-        return jsonify({"erro": "Nome, turma, matrícula, login e senha são obrigatórios"}), 400
+        return jsonify({"erro": "Nome, turma, login e senha são obrigatórios"}), 400
 
     existente = execute_query(
-        "SELECT id_estudante FROM estudante WHERE matricula = %s OR login = %s",
-        (data.get("matricula"), data.get("login")), fetch_one=True
+        "SELECT id_estudante FROM estudante WHERE login = %s",
+        (data.get("login"),), fetch_one=True
     )
     if existente:
-        return jsonify({"erro": "Matrícula ou login já cadastrado"}), 409
+        return jsonify({"erro": "Login já cadastrado"}), 409
 
+    matricula = gerar_matricula_unica()
     senha_hash = generate_password_hash(data.get("password"))
 
     novo_id = execute_query(
         """INSERT INTO estudante (nome, turma, matricula, contato, login, password)
            VALUES (%s, %s, %s, %s, %s, %s)""",
-        (data.get("nome"), data.get("turma"), data.get("matricula"),
+        (data.get("nome"), data.get("turma"), matricula,
          data.get("contato"), data.get("login"), senha_hash),
         commit=True
     )
-    return jsonify({"mensagem": "Aluno cadastrado com sucesso", "id_estudante": novo_id}), 201
+    return jsonify({"mensagem": "Aluno cadastrado com sucesso",
+                     "id_estudante": novo_id, "matricula": matricula}), 201
 
 
 @estudantes_bp.route("/estudantes", methods=["GET"])

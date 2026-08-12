@@ -64,3 +64,21 @@ CREATE INDEX idx_livro_autor ON livro(autor);
 CREATE INDEX idx_livro_categoria ON livro(categoria);
 CREATE INDEX idx_emprestimo_status ON emprestimo(status);
 CREATE INDEX idx_estudante_matricula ON estudante(matricula);
+
+
+-- Modificação da tabela emprestimo para adicionar a coluna id_funcionario
+SELECT CONSTRAINT_NAME
+FROM information_schema.KEY_COLUMN_USAGE
+WHERE TABLE_SCHEMA = 'biblioteca_escolar'
+  AND TABLE_NAME = 'emprestimo'
+  AND COLUMN_NAME = 'id_funcionario'
+  AND REFERENCED_TABLE_NAME = 'funcionario';
+
+  ALTER TABLE emprestimo
+    DROP FOREIGN KEY nome_encontrado_aqui;
+
+ALTER TABLE emprestimo
+    ADD CONSTRAINT fk_emprestimo_funcionario FOREIGN KEY (id_funcionario)
+        REFERENCES funcionario(id_funcionario)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE;

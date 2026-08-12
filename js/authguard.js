@@ -76,7 +76,12 @@ function mostrarToast(mensagem, tipo = "success") {
     toast.className = "toast";
     document.body.appendChild(toast);
   }
-  toast.textContent = mensagem;
+
+  const icone = tipo === "error"
+    ? `<svg class="toast-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 8l8 8M16 8l-8 8"/></svg>`
+    : `<svg class="toast-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M7 12.5l3 3 7-7"/></svg>`;
+
+  toast.innerHTML = `${icone}<span>${mensagem}</span>`;
   toast.className = `toast show ${tipo}`;
   clearTimeout(toast._timeout);
   toast._timeout = setTimeout(() => toast.classList.remove("show"), 3200);

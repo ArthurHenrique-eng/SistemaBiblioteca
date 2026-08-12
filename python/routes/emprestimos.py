@@ -1,23 +1,74 @@
-from datetime import date
+from datetime import date, timedelta
 from flask import Blueprint, request, jsonify
 from db import get_connection, execute_query
 
 emprestimos_bp = Blueprint("emprestimos", __name__)
 
 
+def formatar_datas(registros, campos):
+    """Converte objetos date/datetime do MySQL em strings 'YYYY-MM-DD' no JSON."""
+    for registro in registros:
+        for campo in campos:
+            valor = registro.get(campo)
+            if valor is not None and hasattr(valor, "isoformat"):
+                registro[campo] = valor.isoformat()
+    return registros
+
+
 @emprestimos_bp.route("/emprestimos", methods=["POST"])
 def registrar_emprestimo():
-    """RF05 - Registro de empréstimo + RF07 - Atualização de disponibilidade"""
+    """RF05 - Registro de empréstimo (funcionário) + RF07 - Atualização de disponibilidade"""
     data = request.get_json(silent=True) or {}
     id_estudante = data.get("id_estudante")
     id_livro = data.get("id_livro")
     id_funcionario = data.get("id_funcionario")
     data_devolucao_prevista = data.get("data_devolucao_prevista")
 
-    if not all([id_estudante, id_livro, id_funcionario, data_devolucao_prevista]):
-        return jsonify({"erro": "id_estudante, id_livro, id_funcionario e "
+    if not all([id_estudante, id_livro, data_devolucao_prevista]):
+        return jsonify({"erro": "id_estudante, id_livro e "
                                  "data_devolucao_prevista são obrigatórios"}), 400
 
+    return _criar_emprestimo(id_estudante, id_livro, id_funcionario, data_devolucao_prevista)
+
+
+@emprestimos_bp.route("/estudantes/<int:id_estudante>/emprestimos", methods=["POST"])
+def autoemprestimo(id_estudante):
+    """Autoempréstimo: o próprio aluno pega um livro emprestado, sem funcionário."""
+    data = request.get_json(silent=True) or {}
+    id_livro = data.get("id_livro")
+    dias_emprestimo = data.get("dias_emprestimo", 14)
+
+    if not id_livro:
+        return jsonify({"erro": "id_livro é obrigatório"}), 400
+
+    aluno = execute_query(
+        "SELECT id_estudante FROM estudante WHERE id_estudante = %s",
+        (id_estudante,), fetch_one=True
+    )
+    if not aluno:
+        return jsonify({"erro": "Aluno não encontrado"}), 404
+
+    ja_ativo = execute_query(
+        """SELECT id_emprestimo FROM emprestimo
+           WHERE id_estudante = %s AND id_livro = %s AND status = 'ativo'""",
+        (id_estudante, id_livro), fetch_one=True
+    )
+    if ja_ativo:
+        return jsonify({"erro": "Você já tem um empréstimo ativo deste livro"}), 409
+
+    total_ativos = execute_query(
+        "SELECT COUNT(*) AS total FROM emprestimo WHERE id_estudante = %s AND status = 'ativo'",
+        (id_estudante,), fetch_one=True
+    )
+    if total_ativos["total"] >= 3:
+        return jsonify({"erro": "Limite de 3 empréstimos simultâneos atingido"}), 409
+
+    data_devolucao_prevista = (date.today() + timedelta(days=int(dias_emprestimo))).isoformat()
+
+    return _criar_emprestimo(id_estudante, id_livro, None, data_devolucao_prevista)
+
+
+def _criar_emprestimo(id_estudante, id_livro, id_funcionario, data_devolucao_prevista):
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
     try:
@@ -45,7 +96,8 @@ def registrar_emprestimo():
 
         conn.commit()
         return jsonify({"mensagem": "Empréstimo registrado com sucesso",
-                         "id_emprestimo": novo_id}), 201
+                         "id_emprestimo": novo_id,
+                         "data_devolucao_prevista": data_devolucao_prevista}), 201
     except Exception as e:
         conn.rollback()
         return jsonify({"erro": str(e)}), 500
@@ -103,6 +155,7 @@ def listar_emprestimos_ativos():
            ORDER BY e.data_devolucao_prevista ASC""",
         fetch=True
     )
+    emprestimos = formatar_datas(emprestimos, ["data_emprestimo", "data_devolucao_prevista"])
     return jsonify(emprestimos), 200
 
 
@@ -126,6 +179,9 @@ def historico_emprestimos():
     query += " ORDER BY e.data_emprestimo DESC"
 
     emprestimos = execute_query(query, tuple(params), fetch=True)
+    emprestimos = formatar_datas(
+        emprestimos, ["data_emprestimo", "data_devolucao_prevista", "data_devolucao_real"]
+    )
     return jsonify(emprestimos), 200
 
 
@@ -140,5 +196,8 @@ def meus_emprestimos(id_estudante):
            WHERE e.id_estudante = %s
            ORDER BY e.data_emprestimo DESC""",
         (id_estudante,), fetch=True
+    )
+    emprestimos = formatar_datas(
+        emprestimos, ["data_emprestimo", "data_devolucao_prevista", "data_devolucao_real"]
     )
     return jsonify(emprestimos), 200
